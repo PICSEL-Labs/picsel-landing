@@ -1,0 +1,114 @@
+@import 'tailwindcss';
+
+/* Fonts from Naver's hangeul CDN; it ships one family per weight, so map them back onto weights here. */
+@font-face {
+  font-family: 'NanumSquareRound';
+  font-weight: 300;
+  src: url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundL.woff2)
+    format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'NanumSquareRound';
+  font-weight: 400;
+  src: url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundR.woff2)
+    format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'NanumSquareRound';
+  font-weight: 700;
+  src: url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundB.woff2)
+    format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'NanumSquareRound';
+  font-weight: 800;
+  src: url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquareRound/NanumSquareRoundEB.woff2)
+    format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'NanumSquare';
+  font-weight: 300;
+  src: url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquare/NanumSquareL.woff)
+    format('woff');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'NanumSquare';
+  font-weight: 400;
+  src: url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquare/NanumSquareR.woff)
+    format('woff');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'NanumSquare';
+  font-weight: 700;
+  src: url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquare/NanumSquareB.woff)
+    format('woff');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'NanumSquare';
+  font-weight: 800;
+  src: url(https://hangeul.pstatic.net/hangeul_static/webfont/NanumSquare/NanumSquareEB.woff)
+    format('woff');
+  font-display: swap;
+}
+
+/* Figma variables (랜딩페이지 최종) */
+@theme {
+  --font-round: 'NanumSquareRound', sans-serif;
+  --font-square: 'NanumSquare', sans-serif;
+
+  --color-brand: #ff6c9a; /* Surface/brand/Primary, TextIcon/OnNormal/Primary */
+  --color-brand-high: #fb437d; /* TextIcon/OnNormal/Primary-High */
+  --color-ink: #111114; /* Surface/brand/Secondary */
+  --color-text-high: #26272c; /* TextIcon/OnNormal/High */
+  --color-text-mid: #676b79; /* TextIcon/OnNormal/Mid */
+  --color-text-low: #b2b5bd; /* TextIcon/OnNormal/Low */
+  --color-line: #f3f3f5; /* Border/Normal/Lowest */
+  --color-pink-100: #ffeef4;
+  --color-pink-200: #fedee8;
+  --color-pink-300: #fecddd;
+
+  /* FAQ answers and the mobile menu appearing */
+  --animate-pop-in: pop-in 0.25s ease-out;
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+  }
+}
+
+body {
+  @apply bg-white font-round text-text-high antialiased;
+}
+
+@layer base {
+  /* Press feedback on buttons and button-like links (inline text links can't scale, so they're unaffected) */
+  @media (prefers-reduced-motion: no-preference) {
+    button:not(:disabled),
+    a {
+      transition: scale 0.15s ease-out;
+    }
+    button:not(:disabled):active,
+    a:active {
+      scale: 0.97;
+    }
+  }
+}
+
+/* Scroll-in for section blocks; src/shared/lib/reveal.ts sets the attribute */
+[data-reveal='hidden'] {
+  opacity: 0;
+  transform: translateY(40px);
+}
+[data-reveal='shown'] {
+  transition:
+    opacity 0.6s cubic-bezier(0.25, 0.1, 0.25, 1),
+    transform 0.6s cubic-bezier(0.25, 0.1, 0.25, 1);
+}

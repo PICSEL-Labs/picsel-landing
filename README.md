@@ -1,14 +1,40 @@
 # PICSEL Web
 
-포토부스를 찾고-찍고-사진 보관까지 한번에! Next.js 기반 웹 프로젝트입니다.
+포토부스를 찾고-찍고-사진 보관까지 한번에! Vite + React 기반 랜딩 페이지입니다.
 
 ## Getting Started
 
 ```bash
-npm run dev
+npm install
+npm run dev        # http://localhost:5173
 ```
 
-[http://localhost:3000](http://localhost:3000)에서 확인할 수 있습니다.
+| 명령              | 하는 일                                                                     |
+| ----------------- | --------------------------------------------------------------------------- |
+| `npm run dev`     | 개발 서버 (저장하면 바로 반영)                                              |
+| `npm run build`   | 타입 검사 → `dist/` 빌드 → 페이지별 HTML 미리 생성 (`scripts/prerender.js`) |
+| `npm run preview` | `dist/`를 배포 환경처럼 로컬에서 확인                                       |
+| `npm run lint`    | ESLint (+ Prettier) 검사                                                    |
+| `npm run format`  | Prettier로 전체 포맷                                                        |
+
+## 배포 (Cloudflare Pages)
+
+| 항목                   | 값              |
+| ---------------------- | --------------- |
+| Build command          | `npm run build` |
+| Build output directory | `dist`          |
+
+Node 버전은 `.node-version`(22)으로 고정합니다. Cloudflare 기본값(Node 18)으로는 Vite 8이 빌드되지 않습니다.
+
+빌드하면 페이지마다 HTML이 미리 만들어집니다 (`dist/service.html`, `dist/features/qr.html` …). 자바스크립트를 실행하지 않는 검색엔진·카카오톡 미리보기도 페이지 내용과 제목·설명을 볼 수 있습니다. 페이지를 추가하면 `src/shared/constants/seo.ts`의 `PAGE_META`와 `public/sitemap.xml`에도 추가하세요.
+
+기존 Next 사이트 주소 `/features`는 `public/_redirects`에서 `/features/map`으로 301 이동합니다.
+
+`public/404.html`이 없으면 Cloudflare Pages가 SPA로 판단해 `/features/qr` 같은 경로도 `index.html`로 응답합니다. 404.html을 추가하지 마세요.
+
+## 기술 스택
+
+Vite 8 · React 19 · TypeScript 5.9 · Tailwind CSS 4 · React Router 8 · ESLint 9 · Prettier 3
 
 ---
 
@@ -18,16 +44,19 @@ npm run dev
 
 ```
 📦 src
-┣ 📂 api             # API 요청 관련 (axios, react-query)
-┣ 📂 assets          # 이미지, 아이콘, 폰트 등 정적 파일
-┣ 📂 components      # 공통 UI 컴포넌트 (버튼, 카드, 모달 등)
-┣ 📂 features        # 주요 도메인 기능 (모듈 단위 관리)
-┣ 📂 hooks           # 커스텀 훅 (useAuth, useLocation 등)
-┣ 📂 utils           # 유틸리티 함수
-┣ 📂 store           # Zustand 상태관리
-┣ 📂 styles          # 전역 스타일
-┗ 📂 app             # Next.js App Router 페이지
+┣ 📂 pages           # 라우트 단위 페이지 (App.tsx에서 연결)
+┣ 📂 widgets         # 페이지를 구성하는 섹션 단위 UI
+┃ ┣ 📂 home
+┃ ┣ 📂 features
+┃ ┗ 📂 layout        # Navbar, Footer
+┣ 📂 shared
+┃ ┣ 📂 ui            # 여러 페이지에서 쓰는 공용 컴포넌트
+┃ ┗ 📂 constants     # 상수 데이터 (UPPER_CASE)
+┗ 📄 index.css       # Tailwind 테마 토큰 (@theme)
+📦 public/assets     # 이미지 (kebab-case, WebP)
 ```
+
+`@/` 경로 별칭 = `src/` (예: `import Phone from "@/shared/ui/Phone"`)
 
 ### 📝 2. 명명 규칙
 
@@ -206,21 +235,29 @@ main
 
 예: `feat/23/auth/login`
 
-#### 10.3 커밋 메시지 규칙
+#### 10.3 커밋 메시지 규칙 (picsel-app과 동일)
 
-형식: `Type: 영어로 메시지`
+형식: `✨ Feat : 메시지` — 커밋할 때 commitlint가 검사하고, 형식이 틀리면 커밋이 막힙니다.
 
-| Type       | 설명                           |
-| ---------- | ------------------------------ |
-| `Feat`     | 새로운 기능 추가               |
-| `Fix`      | 버그 수정                      |
-| `Docs`     | 문서 수정                      |
-| `Remove`   | 파일 삭제                      |
-| `Style`    | 코드 스타일 변경 (동작 변경 X) |
-| `Chore`    | 빌드/패키지 매니저 수정        |
-| `Modify`   | 수정                           |
-| `Refactor` | 코드 리팩토링                  |
-| `Test`     | 테스트 코드 추가               |
+| Type          | 설명                                                    |
+| ------------- | ------------------------------------------------------- |
+| `✨ Feat`     | 새로운 기능 추가, 기존의 기능을 요구 사항에 맞추어 수정 |
+| `🐛 Fix`      | 기능에 대한 버그 수정                                   |
+| `🚑️ Hotfix`   | 급하게 치명적인 버그를 고치는 경우                      |
+| `📦️ Chore`    | 패키지 매니저 수정, 그 외 기타 수정 (ex. .gitignore)    |
+| `📝 Docs`     | 문서(주석) 수정                                         |
+| `🎨 Style`    | 코드 스타일, 포맷팅에 대한 수정                         |
+| `💄 Design`   | CSS 수정                                                |
+| `♻️ Refactor` | 기능의 변화가 아닌 코드 리팩터링 (ex. 변수 이름 변경)   |
+| `🔨 Modify`   | 단순한 코드 수정 (ex. 오타, 문자열 변경)                |
+| `🚚 Rename`   | 파일 및 폴더 구조 변경                                  |
+| `➖ Remove`   | 파일 삭제                                               |
+| `🔖 Release`  | 버전 릴리즈                                             |
+| `🧪 Test`     | 테스트 코드 관련                                        |
+
+- VS Code의 Gitmoji 확장을 쓰면 위 목록에서 골라 넣을 수 있습니다 (`.vscode/settings.json`).
+- 커밋 전에 lint-staged가 `src`의 바뀐 파일에 Prettier와 ESLint를 자동 실행합니다.
+- 훅(husky)은 git 저장소에서 `npm install`을 하면 자동으로 설치됩니다.
 
 #### 10.4 전체 플로우
 

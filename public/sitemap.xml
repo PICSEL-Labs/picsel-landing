@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://picsel-web.pages.dev</loc><changefreq>monthly</changefreq><priority>1</priority></url>
-  <url><loc>https://picsel-web.pages.dev/service</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://picsel-web.pages.dev/features/map</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://picsel-web.pages.dev/features/qr</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://picsel-web.pages.dev/features/pixelbook</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://picsel-web.pages.dev/team</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
-  <url><loc>https://picsel-web.pages.dev/contact</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://picsel-landing.pages.dev</loc><changefreq>monthly</changefreq><priority>1</priority></url>
+  <url><loc>https://picsel-landing.pages.dev/service</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://picsel-landing.pages.dev/features/map</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://picsel-landing.pages.dev/features/qr</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://picsel-landing.pages.dev/features/pixelbook</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://picsel-landing.pages.dev/team</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://picsel-landing.pages.dev/contact</loc><changefreq>monthly</changefreq><priority>0.5</priority></url>
 </urlset>

@@ -1,4 +1,4 @@
-export const SITE_URL = 'https://picsel-web.pages.dev';
+export const SITE_URL = 'https://picsel-landing.pages.dev';
 
 interface PageMeta {
   title: string;

@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, type ReactNode } from 'react';
 
 // Figma: Section 8 — Desktop 4278:41577 / Tablet 4687:15293 / Mobile 4359:13022 (rows: HOME_FAQ 4219:11247)

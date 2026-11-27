@@ -1,7 +1,13 @@
+'use client';
+
+import { useEffect } from 'react';
+
+import { usePathname } from 'next/navigation';
+
 // Fades each section block up as it scrolls into view, like the old site's ScrollReveal (styles in index.css).
 // Blocks already on screen are left alone so prerendered content never flashes, and people who ask for
-// reduced motion get no animation. Returns a cleanup for the route-change effect in App.tsx.
-export function revealOnScroll() {
+// reduced motion get no animation.
+function revealOnScroll() {
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   const observer = new IntersectionObserver(
@@ -36,4 +42,13 @@ export function revealOnScroll() {
   }
 
   return () => observer.disconnect();
+}
+
+// Mounted once in the root layout; runs again after every client-side page change.
+export function RevealOnScroll() {
+  const pathname = usePathname();
+
+  useEffect(() => revealOnScroll(), [pathname]);
+
+  return null;
 }

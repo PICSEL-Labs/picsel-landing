@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useRef, type ReactNode } from 'react';
 
 // Figma: Section 10 (desktop 4554:13674) / Section 2 (tablet 4687:14984, mobile 4359:12814)

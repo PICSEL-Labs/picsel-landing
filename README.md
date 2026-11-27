@@ -1,40 +1,46 @@
 # PICSEL Web
 
-포토부스를 찾고-찍고-사진 보관까지 한번에! Vite + React 기반 랜딩 페이지입니다.
+포토부스를 찾고-찍고-사진 보관까지 한번에! Next.js(정적 export) + React 기반 랜딩 페이지입니다.
 
 ## Getting Started
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173
+npm run dev        # http://localhost:3000
 ```
 
-| 명령              | 하는 일                                                                     |
-| ----------------- | --------------------------------------------------------------------------- |
-| `npm run dev`     | 개발 서버 (저장하면 바로 반영)                                              |
-| `npm run build`   | 타입 검사 → `dist/` 빌드 → 페이지별 HTML 미리 생성 (`scripts/prerender.js`) |
-| `npm run preview` | `dist/`를 배포 환경처럼 로컬에서 확인                                       |
-| `npm run lint`    | ESLint (+ Prettier) 검사                                                    |
-| `npm run format`  | Prettier로 전체 포맷                                                        |
+| 명령              | 하는 일                                                                 |
+| ----------------- | ----------------------------------------------------------------------- |
+| `npm run dev`     | 개발 서버 (저장하면 바로 반영)                                          |
+| `npm run build`   | 타입 검사 → 페이지마다 완성된 HTML을 `out/`에 생성 (`output: 'export'`) |
+| `npm run preview` | `out/`을 배포 환경처럼 로컬에서 확인                                    |
+| `npm run lint`    | ESLint (+ Prettier) 검사                                                |
+| `npm run format`  | Prettier로 전체 포맷                                                    |
 
 ## 배포 (Cloudflare Pages)
 
 | 항목                   | 값              |
 | ---------------------- | --------------- |
+| Framework preset       | `None`          |
 | Build command          | `npm run build` |
-| Build output directory | `dist`          |
+| Build output directory | `out`           |
 
-Node 버전은 `.node-version`(22)으로 고정합니다. Cloudflare 기본값(Node 18)으로는 Vite 8이 빌드되지 않습니다.
+Node 버전은 `.node-version`(22)으로 고정합니다.
 
-빌드하면 페이지마다 HTML이 미리 만들어집니다 (`dist/service.html`, `dist/features/qr.html` …). 자바스크립트를 실행하지 않는 검색엔진·카카오톡 미리보기도 페이지 내용과 제목·설명을 볼 수 있습니다. 페이지를 추가하면 `src/shared/constants/seo.ts`의 `PAGE_META`와 `public/sitemap.xml`에도 추가하세요.
+서버 없이 정적 파일만 배포합니다. 빌드하면 페이지마다 HTML이 미리 만들어지므로 (`out/service.html`, `out/features/qr.html` …) 자바스크립트를 실행하지 않는 검색엔진·카카오톡 미리보기도 페이지 내용과 제목·설명을 볼 수 있습니다.
 
-기존 Next 사이트 주소 `/features`는 `public/_redirects`에서 `/features/map`으로 301 이동합니다.
+페이지를 추가할 때:
 
-`public/404.html`이 없으면 Cloudflare Pages가 SPA로 판단해 `/features/qr` 같은 경로도 `index.html`로 응답합니다. 404.html을 추가하지 마세요.
+1. `src/app/<경로>/page.tsx`를 만들고 `export const metadata = pageMetadata('<경로>')`를 둡니다.
+2. `src/shared/constants/seo.ts`의 `PAGE_META`에 제목·설명을 추가합니다. `sitemap.xml`은 여기서 자동으로 만들어집니다.
+
+- 없는 주소는 `src/app/not-found.tsx`(→ `out/404.html`)가 404로 응답합니다.
+- 기존 Next 사이트 주소 `/features`는 `public/_redirects`에서 `/features/map`으로 301 이동합니다.
+- `next/image`, API 라우트, 서버 액션처럼 서버가 필요한 기능은 정적 export에서 동작하지 않습니다.
 
 ## 기술 스택
 
-Vite 8 · React 19 · TypeScript 5.9 · Tailwind CSS 4 · React Router 8 · ESLint 9 · Prettier 3
+Next.js 16 (App Router, 정적 export) · React 19 · TypeScript 5.9 · Tailwind CSS 4 · ESLint 9 · Prettier 3
 
 ---
 
@@ -44,14 +50,16 @@ Vite 8 · React 19 · TypeScript 5.9 · Tailwind CSS 4 · React Router 8 · ESLi
 
 ```
 📦 src
-┣ 📂 pages           # 라우트 단위 페이지 (App.tsx에서 연결)
+┣ 📂 app             # 라우트 (page.tsx = 메타데이터 + views 연결), layout, sitemap, robots, 아이콘
+┣ 📂 views           # 페이지 화면 (Next의 pages 폴더 규칙과 겹치지 않도록 views)
 ┣ 📂 widgets         # 페이지를 구성하는 섹션 단위 UI
 ┃ ┣ 📂 home
 ┃ ┣ 📂 features
 ┃ ┗ 📂 layout        # Navbar, Footer
 ┣ 📂 shared
 ┃ ┣ 📂 ui            # 여러 페이지에서 쓰는 공용 컴포넌트
-┃ ┗ 📂 constants     # 상수 데이터 (UPPER_CASE)
+┃ ┣ 📂 lib           # 스크롤 등장 애니메이션 등
+┃ ┗ 📂 constants     # 상수 데이터 (UPPER_CASE), SEO
 ┗ 📄 index.css       # Tailwind 테마 토큰 (@theme)
 📦 public/assets     # 이미지 (kebab-case, WebP)
 ```
